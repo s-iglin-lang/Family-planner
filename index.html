@@ -1,0 +1,206 @@
+
+   <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Family Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+</head>
+<body>
+    <div id="app">
+        <!-- Экран входа -->
+        <div id="login-screen" class="screen">
+            <h1 class="app-title">Family Planner</h1>
+            <div class="login-box">
+                <label>Имя</label>
+                <input type="text" id="login-name" placeholder="Введите имя">
+                
+                <label>Пин-код</label>
+                <input type="password" id="login-pin" maxlength="4" placeholder="4 цифры">
+
+                <button id="login-button">Войти</button>
+                <div id="login-message" class="message"></div>
+            </div>
+        </div>
+
+        <!-- Главный экран -->
+        <div id="main-screen" class="screen hidden">
+            <!-- Верхняя панель -->
+            <div class="top-bar">
+    <button id="menu-button" class="menu-button">
+        ☰
+    </button>
+    <div class="top-bar-right">
+    <div id="current-user" class="current-user"></div>
+    <button id="add-task-button" class="add-task-button">+</button>
+    </div>
+</div>
+
+            <!-- Левое выезжающее меню -->
+            <div id="side-menu" class="side-menu hidden">
+                <div class="side-menu-content">
+                    <h3>Меню</h3>
+                  <ul>
+    <li data-menu="categories">Категории</li>
+    <li data-menu="calendar">Календарь</li>
+    <li data-menu="search">Поиск</li>
+    <li data-menu="completed">Выполненные</li>
+    <li data-menu="settings">Настройки</li>
+    <li data-menu="reset">Сбросить данные</li> 
+    <li data-menu="logout">Выход</li>
+                  </ul>
+                </div>
+            </div>
+
+            <!-- Основной фон -->
+            <div class="background-overlay"></div>
+
+            <!-- Блоки задач -->
+            <div class="tasks-container">
+                <div class="task-group">
+                    <div class="task-group-header" data-group="today">
+                        <span id="label-today-title">Сегодня</span>
+                        <span id="label-today-date" class="group-date-label"></span>
+                        <span class="toggle-indicator">▼</span>
+                    </div>
+                    <div id="tasks-today" class="task-list"></div>
+                </div>
+
+                <div class="task-group">
+                    <div class="task-group-header" data-group="tomorrow">
+                        <span id="label-tomorrow-title">Завтра</span>
+                        <span id="label-tomorrow-date" class="group-date-label"></span>
+                        <span class="toggle-indicator">▼</span>
+                    </div>
+                    <div id="tasks-tomorrow" class="task-list"></div>
+                </div>
+
+                <div class="task-group">
+                    <div class="task-group-header" data-group="week">
+                        <span>Неделя</span>
+                        <span class="toggle-indicator">▼</span>
+                    </div>
+                    <div id="tasks-week" class="task-list"></div>
+                </div>
+
+                <div class="task-group">
+                    <div class="task-group-header" data-group="month">
+                        <span>В этом месяце</span>
+                        <span class="toggle-indicator">▼</span>
+                    </div>
+                    <div id="tasks-month" class="task-list"></div>
+                </div>
+            </div>
+
+            <!-- Панель календаря -->
+            <div id="calendar-panel" class="calendar-panel hidden">
+                <div class="calendar-header">
+                    <button id="calendar-prev-month" class="calendar-nav-btn">‹</button>
+                    <span id="calendar-month-label"></span>
+                    <button id="calendar-next-month" class="calendar-nav-btn">›</button>
+                    <button id="calendar-close-button" class="calendar-close-button">✕</button>
+                </div>
+
+                <div class="calendar-weekdays">
+                    <span>Пн</span>
+                    <span>Вт</span>
+                    <span>Ср</span>
+                    <span>Чт</span>
+                    <span>Пт</span>
+                    <span>Сб</span>
+                    <span>Вс</span>
+                </div>
+
+                <div id="calendar-grid" class="calendar-grid"></div>
+
+                <div id="calendar-tooltip" class="calendar-tooltip hidden"></div>
+            </div>
+
+            <!-- Форма создания задачи -->
+            <div id="task-form-container" class="task-form hidden">
+                <h3>Новая задача</h3>
+                <label>Название</label>
+                <input type="text" id="task-title" placeholder="Что нужно сделать">
+
+                <label>Описание</label>
+                <textarea id="task-description" placeholder="Подробно: что именно нужно сделать" rows="3"></textarea>
+
+                <label>Категория</label>
+                <select id="task-category"></select>
+
+                <label>Тип задачи</label>
+                <select id="task-visibility">
+                    <option value="personal">Личная</option>
+                    <option value="shared">Общая</option>
+                </select>
+
+                <label>Дата</label>
+                <input type="date" id="task-date">
+
+                <label>Время (начало)</label>
+                <input type="time" id="task-time-start">
+
+                <label>Время (конец)</label>
+                <input type="time" id="task-time-end">
+
+                <label>Приз</label>
+                <input type="text" id="task-prize" placeholder="Например: поцелуй">
+
+                <div class="task-form-buttons">
+                    <button id="task-save-button">Сохранить</button>
+                    <button id="task-cancel-button" class="secondary">Отмена</button>
+                </div>
+                <div id="task-form-message" class="message"></div>
+            </div>
+            <!-- Окно подробной информации о задаче -->
+            <div id="task-details-modal" class="task-details-modal hidden">
+                <div class="task-details-backdrop"></div>
+                <div class="task-details-dialog">
+                    <div class="task-details-header">
+                        <h3 id="details-title"></h3>
+                        <button id="details-close-button" class="details-close-button">✕</button>
+                    </div>
+                    <div class="task-details-body">
+                        <div class="task-details-row">
+                            <span class="task-details-label">Дата:</span>
+                            <span id="details-date"></span>
+                        </div>
+                        <div class="task-details-row">
+                            <span class="task-details-label">Время:</span>
+                            <span id="details-time"></span>
+                        </div>
+                        <div class="task-details-row">
+                            <span class="task-details-label">Категория:</span>
+                            <span id="details-category"></span>
+                        </div>
+                        <div class="task-details-row">
+                            <span class="task-details-label">Тип:</span>
+                            <span id="details-visibility"></span>
+                        </div>
+                        <div class="task-details-row">
+                            <span class="task-details-label">Приз:</span>
+                            <span id="details-prize"></span>
+                        </div>
+                        <div class="task-details-row task-details-description">
+                            <span class="task-details-label">Описание:</span>
+                            <div id="details-description"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- конец #main-screen -->
+    </div> <!-- конец #app -->
+
+    <script src="app.js"></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .catch(err => console.log('SW registration failed', err));
+        });
+    }
+    </script>
+</body>
+</html>
